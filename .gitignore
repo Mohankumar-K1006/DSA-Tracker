@@ -1,8 +1,8 @@
 # Dependencies
 node_modules/
 
-# Build output
-dist/
+# Build output (inside frontend only — root build files are deployed)
+frontend/dist/
 dist-ssr/
 
 # Environment files
