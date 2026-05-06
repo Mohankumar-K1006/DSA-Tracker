@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DSA_PROBLEMS, DSA_TOPICS } from '../data/problemsData';
+import { XP_REWARDS } from '../data/levels';
 
 const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -8,6 +10,7 @@ export default function ProblemsTab({ progress }) {
   const [diffFilter, setDiffFilter] = useState('all');
   const [topicFilter, setTopicFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const navigate = useNavigate();
 
   const filtered = useMemo(() => {
     let list = [...DSA_PROBLEMS];
@@ -28,7 +31,12 @@ export default function ProblemsTab({ progress }) {
     <div id="tab-problems" className="tab-content active">
       <div className="dashboard-container">
         <header className="dashboard-header">
-          <div><h1>Problem List</h1><p className="subtitle">{DSA_PROBLEMS.length} curated DSA problems — {solved} solved.</p></div>
+          <div>
+            <h1>Problem List</h1>
+            <p className="subtitle">
+              {DSA_PROBLEMS.length} curated DSA problems — {solved} solved
+            </p>
+          </div>
         </header>
 
         <div className="filters-bar">
@@ -38,7 +46,9 @@ export default function ProblemsTab({ progress }) {
           </div>
           <div className="filter-chips">
             {['all','easy','medium','hard','unsolved','solved'].map(f => (
-              <button key={f} className={`chip ${diffFilter === f ? 'active' : ''}`} onClick={() => setDiffFilter(f)}>{capitalize(f)}</button>
+              <button key={f} className={`chip ${diffFilter === f ? 'active' : ''}`} onClick={() => setDiffFilter(f)}>
+                {capitalize(f)}
+              </button>
             ))}
           </div>
           <div className="filter-chips filter-chips-scrollable">
@@ -51,11 +61,20 @@ export default function ProblemsTab({ progress }) {
 
         <div className="problems-table-container">
           <table className="problems-table">
-            <thead><tr><th className="th-status">Status</th><th className="th-name">Problem</th><th className="th-topic">Topic</th><th className="th-difficulty">Difficulty</th><th className="th-link">Link</th></tr></thead>
+            <thead><tr>
+              <th className="th-status">Status</th>
+              <th className="th-name">Problem</th>
+              <th className="th-topic">Topic</th>
+              <th className="th-difficulty">Difficulty</th>
+              <th className="th-xp">XP</th>
+              <th className="th-link">Actions</th>
+            </tr></thead>
             <tbody>
               {filtered.map(p => {
                 const isSolved = !!solvedProblems[p.id];
                 const topic = DSA_TOPICS.find(t => t.id === p.topic);
+                const xpReward = XP_REWARDS[p.difficulty] || 10;
+
                 return (
                   <tr key={p.id} className={isSolved ? 'solved' : ''}>
                     <td className="td-status">
@@ -63,13 +82,25 @@ export default function ProblemsTab({ progress }) {
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                       </div>
                     </td>
-                    <td><span className="problem-name">{p.name}</span></td>
+                    <td>
+                      <button className="problem-name-btn" onClick={() => navigate(`/solve/${p.id}`)}>
+                        {p.name}
+                      </button>
+                    </td>
                     <td><span className="topic-badge" style={{ background: topic?.bgColor, color: topic?.color }}>{topic?.name || p.topic}</span></td>
                     <td><span className={`difficulty-badge difficulty-${p.difficulty}`}>{capitalize(p.difficulty)}</span></td>
+                    <td><span className="xp-badge-small">+{xpReward}</span></td>
                     <td style={{ textAlign: 'center' }}>
-                      <a href={p.leetcode} target="_blank" rel="noopener noreferrer" className="link-btn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                      </a>
+                      <div className="problem-actions">
+                        <button className="solve-action-link" onClick={() => navigate(`/solve/${p.id}`)} title="Solve">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                          </svg>
+                        </button>
+                        <a href={p.leetcode} target="_blank" rel="noopener noreferrer" className="link-btn" title="Open on LeetCode">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 );

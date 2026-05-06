@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { DSA_PROBLEMS, DSA_TOPICS } from '../data/problemsData';
 import { ACHIEVEMENTS, MOTIVATIONAL_QUOTES } from '../data/problemsData';
+import { getLevelForXP, getXPForNextLevel, XP_REWARDS } from '../data/levels';
+import XPBar from '../components/XPBar';
 
 function timeAgo(date) {
   const seconds = Math.floor((new Date() - date) / 1000);
@@ -16,8 +18,11 @@ function timeAgo(date) {
 }
 
 export default function DashboardTab({ progress, greeting }) {
-  const { solvedProblems, activityLog, dailyGoal, toggleProblem, resetProgress, calculateStreak } = progress;
+  const { solvedProblems, activityLog, dailyGoal, toggleProblem, resetProgress, calculateStreak, xp, level } = progress;
   const [nudgeDismissed, setNudgeDismissed] = useState(false);
+
+  const currentLevel = getLevelForXP(xp || 0);
+  const xpProgress = getXPForNextLevel(xp || 0);
 
   const stats = useMemo(() => {
     const solved = Object.keys(solvedProblems).filter(k => solvedProblems[k]).length;
@@ -118,6 +123,39 @@ export default function DashboardTab({ progress, greeting }) {
           </div>
         </header>
 
+        {/* Level & XP Card */}
+        <section className="section level-xp-section">
+          <div className="level-xp-card" style={{ borderColor: currentLevel.color + '40' }}>
+            <div className="level-xp-left">
+              <div className="level-badge-large" style={{ background: currentLevel.gradient }}>
+                <span className="level-badge-icon">{currentLevel.icon}</span>
+                <span className="level-badge-num">Lv.{currentLevel.level}</span>
+              </div>
+              <div className="level-info">
+                <h3 className="level-name" style={{ color: currentLevel.color }}>{currentLevel.name}</h3>
+                <p className="level-xp-text">{xp || 0} XP total</p>
+              </div>
+            </div>
+            <div className="level-xp-right">
+              <div className="level-progress-info">
+                <span>{xpProgress.progress}%</span>
+                {xpProgress.needed > 0 && <span className="level-next-text">{xpProgress.needed} XP to next level</span>}
+              </div>
+              <div className="level-progress-bar">
+                <div className="level-progress-fill" style={{
+                  width: `${xpProgress.progress}%`,
+                  background: currentLevel.gradient,
+                }} />
+              </div>
+              <div className="level-xp-rewards">
+                <span className="xp-reward-chip xp-easy">Easy +{XP_REWARDS.easy}</span>
+                <span className="xp-reward-chip xp-medium">Medium +{XP_REWARDS.medium}</span>
+                <span className="xp-reward-chip xp-hard">Hard +{XP_REWARDS.hard}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Stats Grid */}
         <div className="stats-grid">
           <div className="stat-card">
@@ -202,6 +240,7 @@ export default function DashboardTab({ progress, greeting }) {
                     <div className="activity-meta">
                       <span className={`difficulty-badge difficulty-${problem.difficulty}`}>{problem.difficulty}</span>
                       <span>{topic?.name || ''}</span>
+                      {a.xpAwarded > 0 && <span className="activity-xp">+{a.xpAwarded} XP</span>}
                     </div>
                   </div>
                   <span className="activity-time">{timeAgo(new Date(a.timestamp))}</span>

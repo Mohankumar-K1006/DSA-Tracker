@@ -10,6 +10,7 @@ const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
+const progressRoutes = require('./routes/progress');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,12 +19,16 @@ const PORT = process.env.PORT || 3000;
 connectDB();
 
 // ─── Middleware ──────────────────────────────────────
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://localhost:3000'],
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ─── API Routes ─────────────────────────────────────
 app.use('/api/auth', authRoutes);
+app.use('/api/progress', progressRoutes);
 
 // ─── Serve Frontend Static Files ────────────────────
 // In production, serve the Vite build output from frontend/dist
