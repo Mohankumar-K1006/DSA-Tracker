@@ -33,7 +33,7 @@ export default function App() {
                 <Route path="/" element={currentUser ? <Navigate to="/dashboard" replace /> : <LandingPage />} />
                 <Route path="/auth" element={currentUser ? <Navigate to="/dashboard" replace /> : <AuthPage />} />
                 <Route path="/dashboard" element={<ProtectedRoute><DashboardPage progress={progress} /></ProtectedRoute>} />
-                <Route path="/solve/:problemId" element={<ProtectedRoute><ProblemSolvePage progress={progress} /></ProtectedRoute>} />
+                <Route path="/solve/:problemId" element={<ProtectedRoute><ProblemsTab progress={progress} /></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
 
