@@ -1,12 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { DSA_PROBLEMS } from '../data/problemsData';
-import {
-    apiGetProgress,
-    apiSolveProblem,
-    apiUnsolveProblem,
-    apiResetProgress,
-    apiSaveNotes,
-} from '../utils/api';
+import { apiGetProgress, apiSolveProblem, apiUnsolveProblem, apiResetProgress, apiSaveNotes } from "../api_helpers/api";
 
 export function useProgress() {
     const [solvedProblems, setSolvedProblems] = useState({});

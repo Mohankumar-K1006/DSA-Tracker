@@ -1,6 +1,5 @@
 import { createContext, useState, useCallback, useEffect } from 'react';
-import { apiLogin, apiRegister, apiLogout, apiGetCurrentUser, hasToken } from "./utils/api";
-
+import { apiLogin, apiRegister, apiLogout, apiGetCurrentUser, hasToken } from "../api_helpers/api";
 export const AuthContext = createContext(null);
 
 // ─── Auth Provider ──────────────────────────────────────
