@@ -1,0 +1,1 @@
+export const XP_REWARDS = { Easy: 10, Medium: 20, Hard: 30 };
