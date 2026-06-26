@@ -1,5 +1,5 @@
 import { createContext, useState, useCallback, useEffect } from 'react';
-import { apiLogin, apiRegister, apiLogout, apiGetCurrentUser, hasToken } from "../utils/api";
+//import { apiLogin, apiRegister, apiLogout, apiGetCurrentUser, hasToken } from "../utils/api";
 
 export const AuthContext = createContext(null);
 
