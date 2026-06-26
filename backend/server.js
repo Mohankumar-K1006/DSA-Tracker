@@ -20,11 +20,10 @@ connectDB();
 
 // ─── Middleware ──────────────────────────────────────
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
-    credentials: true,
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // ─── API Routes ─────────────────────────────────────
 app.use('/api/auth', authRoutes);
