@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
-import ProblemSolvePage from './pages/ProblemSolvePage';
+import ProblemsTab from './tabs/ProblemsTab';
 import LevelUpModal from './components/LevelUpModal';
 
 function ProtectedRoute({ children }) {
