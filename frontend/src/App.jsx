@@ -6,7 +6,7 @@ import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import ProblemsTab from './tabs/ProblemsTab';
-//import LevelUpModal from './components/LevelUpModal';
+
 
 function ProtectedRoute({ children }) {
     const { currentUser, loading } = useAuth();
@@ -38,10 +38,10 @@ export default function App() {
             </Routes>
 
             {/* Level Up Modal — renders on top of everything */}
-            <LevelUpModal
+            {/* <LevelUpModal
                 levelUpData={progress.levelUpData}
                 onDismiss={progress.dismissLevelUp}
-            />
+            /> */}
         </>
     );
 }
