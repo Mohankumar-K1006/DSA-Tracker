@@ -25,6 +25,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Body Parsers (Crucial for reading incoming frontend form data)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // ─── API Routes ─────────────────────────────────────
 app.use('/api/auth', authRoutes);
 app.use('/api/progress', progressRoutes);
