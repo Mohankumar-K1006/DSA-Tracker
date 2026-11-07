@@ -19,15 +19,24 @@ API.interceptors.request.use((config) => {
     return config;
 });
 
+// Extract backend error messages instead of showing generic Axios errors
+API.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const message = error.response?.data?.message || error.message || 'Something went wrong';
+        return Promise.reject(new Error(message));
+    }
+);
+
 // Authentication endpoints expected by your AuthContext
-export const apiLogin = async (credentials) => {
-    const response = await API.post('/auth/login', credentials);
+export const apiLogin = async (email, password) => {
+    const response = await API.post('/auth/login', { email, password });
     if (response.data.token) localStorage.setItem('token', response.data.token);
     return response.data;
 };
 
-export const apiRegister = async (userData) => {
-    const response = await API.post('/auth/register', userData);
+export const apiRegister = async (fullName, email, password) => {
+    const response = await API.post('/auth/register', { fullName, email, password });
     if (response.data.token) localStorage.setItem('token', response.data.token);
     return response.data;
 };
