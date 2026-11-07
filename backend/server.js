@@ -34,15 +34,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api/progress', progressRoutes);
 
 // ─── Serve Frontend Static Files ────────────────────
-// In production, serve the Vite build output from frontend/dist
-// In development, use Vite dev server with proxy (port 5173)
+// Only serve frontend if the dist directory exists (not on Render)
+const fs = require('fs');
 const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
-app.use(express.static(frontendPath));
-
-// ─── Catch-all: serve index.html for any non-API route (SPA support)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-});
+if (fs.existsSync(frontendPath)) {
+    app.use(express.static(frontendPath));
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    });
+} else {
+    // API-only mode (Render deployment — frontend is on Vercel)
+    app.get('/', (req, res) => {
+        res.json({ status: 'ok', message: 'DSA Tracker API is running 🚀' });
+    });
+}
 
 // ─── Global Error Handler ───────────────────────────
 app.use((err, req, res, next) => {
