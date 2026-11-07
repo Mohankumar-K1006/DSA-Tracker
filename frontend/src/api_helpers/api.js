@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Connect directly to your live Render backend server
-const API_URL = 'https://dsa-tracker-api-n95q.onrender.com/api';
+// API URL — uses environment variable if set, otherwise falls back to live Render backend
+const API_URL = import.meta.env.VITE_API_URL || 'https://dsa-tracker-api-n95q.onrender.com/api';
 
 // Helper to get token from localStorage
 export const hasToken = () => !!localStorage.getItem('token');
